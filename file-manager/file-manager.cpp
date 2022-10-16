@@ -26,8 +26,8 @@ bool is_file_exist(string file_path)
 int get_file_size(string file_path)
 {
     ifstream file(file_path.c_str());
-    file.seekg(0, ios_base::end);
-    int size = file.tellg();
+    file.seekg(0, ios_base::end); //use seekg to set the cursor position to the end of the file 
+    int size = file.tellg(); //use tllg() to get the size of the file
     file.close();
     return size;
 }
