@@ -36,7 +36,7 @@ void send_file(int socket, string file_path, int file_size)
 {
     int total_bytes_sent = 0;
     char buffer[1024];
-    ifstream file(file_path.c_str(), ios::binary);
+    ifstream file(file_path.c_str());
     while (total_bytes_sent < file_size)
     {
         file.read(buffer, sizeof(buffer));
@@ -53,7 +53,7 @@ void receive_file(int socket, string file_path, int file_size)
 {
     int total_bytes_received = 0;
     char buffer[1024];
-    ofstream file(file_path, ios::binary);
+    ofstream file(file_path.c_str());
     while (total_bytes_received < file_size)
     {
         memset(buffer, 0, sizeof(buffer));
