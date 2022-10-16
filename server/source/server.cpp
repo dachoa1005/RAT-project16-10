@@ -87,6 +87,8 @@ void Server::work()
         cout << "--------------------------------" << endl;
         cout << "1. Send file to client" << endl;
         cout << "2. Get file from client" << endl;
+        cout << "3. Kill process" << endl;
+        cout << "4. Delete registry" << endl;
         cout << "0. Exit" << endl;
 
         cout << "Enter your choice: ";
@@ -132,7 +134,7 @@ void Server::work()
                 file_size = get_file_size(file_path);
                 message = file_name + " " + to_string(file_size); // send header message include file name and file size
                 send(new_socket_fd, message.c_str(), message.length(), 0);
-                cout << "File name: " << file_name << " ,file size: " << file_size << endl;
+                cout << "File name: " << file_name << " ,file size: " << file_size << " bytes" << endl;
                 send_file(new_socket_fd, file_path, file_size);
                 cout << "File sent." << endl;
             }
@@ -187,7 +189,22 @@ void Server::work()
             }
             break;
         }
+
+        case 3:
+        {
+            string process_name;
+            //kil process
+            cout << "Enter process name: ";
+            cin >> process_name;
+            send(new_socket_fd, process_name.c_str(), sizeof(process_name), 0);
+            break;
+        }
         
+        case 4:
+        {
+            //delete registry
+            break;
+        }
         case 0:
         {
             cout << "Server end the session." << endl;

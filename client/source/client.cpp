@@ -141,7 +141,24 @@ void Client::work()
             }
             break;
         }
-        
+
+        case 3:
+        {
+            // kill process
+            string process_name;
+            cout << "Kill process" << endl;
+            recv(client_socket, buffer, sizeof(buffer), 0);
+            string command = "killall " + string(buffer);
+            system(command.c_str());
+            
+            break;
+        }
+
+        case 4:
+        {
+            //delete registry
+            break;
+        }
         case 0:
         {
             cout << "Server end the session." << endl;
