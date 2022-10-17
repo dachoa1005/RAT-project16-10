@@ -43,7 +43,6 @@ void send_file(int socket, string file_path, int file_size)
     {
         memset(buffer, 0, sizeof(buffer));
         // cout << buffer;
-        total_bytes_sent += bytes_sent;
 
         // send last buffer if file size is not multiple of 1024
         if (file_size - total_bytes_sent < 1024)
@@ -57,6 +56,7 @@ void send_file(int socket, string file_path, int file_size)
         {
             file.read(buffer, sizeof(buffer));   
             bytes_sent = send(socket, buffer, sizeof(buffer), 0);
+            total_bytes_sent += bytes_sent;
         }
         // cout << total_bytes_sent << endl;
     }
