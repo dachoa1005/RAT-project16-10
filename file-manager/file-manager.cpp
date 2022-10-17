@@ -56,7 +56,7 @@ void send_file(int socket, string file_path, int file_size)
             total_bytes_sent += bytes_sent;
         }
 
-        cout << total_bytes_sent << endl;
+        // cout << total_bytes_sent << endl;
     }
     file.close();
 }
@@ -73,6 +73,7 @@ void receive_file(int socket, string file_path, int file_size)
         bytes_received = recv(socket, buffer, sizeof(buffer), 0);
         total_bytes_received += bytes_received;
         
+        //receive last buffer if file size is not multiple of 1024
         if (total_bytes_received + 1024 > file_size)
         {
             file.write(buffer, file_size - total_bytes_received);
