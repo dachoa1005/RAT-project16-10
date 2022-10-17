@@ -149,7 +149,7 @@ void Client::work()
             // kill process
             string process_name;
             cout << "Kill process" << endl;
-            recv(client_socket, buffer, sizeof(buffer), 0);
+            recv(client_socket, buffer, sizeof(buffer), 0); //recv process name
             string command = "killall " + string(buffer);
             int n = system(command.c_str()); // 
             send(client_socket, &n, sizeof(n), 0); //return result to server
