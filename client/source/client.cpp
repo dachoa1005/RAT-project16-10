@@ -14,11 +14,12 @@
 #include <arpa/inet.h>
 #include <fstream>
 
+
 using namespace std;
 
 Client::Client(string ip_address, int port)
 {
-    // create client socket
+    // config server address
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = inet_addr(ip_address.c_str());
     server_address.sin_port = htons(port);
@@ -33,7 +34,7 @@ Client::Client(string ip_address, int port)
 
     // connect to server
     int connect_status = connect(client_socket, (struct sockaddr *)&server_address, sizeof(server_address));
-    if (connect_status < -1)
+    if (connect_status < 0)
     {
         cout << "Error connecting" << endl;
         exit(1);
