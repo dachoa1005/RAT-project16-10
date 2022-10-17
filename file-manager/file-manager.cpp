@@ -42,9 +42,7 @@ void send_file(int socket, string file_path, int file_size)
     while (total_bytes_sent < file_size)
     {
         memset(buffer, 0, sizeof(buffer));
-        file.read(buffer, sizeof(buffer));
         // cout << buffer;
-        bytes_sent = send(socket, buffer, sizeof(buffer), 0);
         total_bytes_sent += bytes_sent;
 
         // send last buffer if file size is not multiple of 1024
@@ -55,7 +53,11 @@ void send_file(int socket, string file_path, int file_size)
             bytes_sent = send(socket, buffer, file_size - total_bytes_sent, 0);
             total_bytes_sent += bytes_sent;
         }
-
+        else 
+        {
+            file.read(buffer, sizeof(buffer));   
+            bytes_sent = send(socket, buffer, sizeof(buffer), 0);
+        }
         // cout << total_bytes_sent << endl;
     }
     file.close();
@@ -71,16 +73,14 @@ void receive_file(int socket, string file_path, int file_size)
     {
         memset(buffer, 0, sizeof(buffer));
         bytes_received = recv(socket, buffer, sizeof(buffer), 0);
-        total_bytes_received += bytes_received;
-        
-        //receive last buffer if file size is not multiple of 1024
-        if (total_bytes_received + 1024 > file_size)
+        if (bytes_received == -1)
         {
-            file.write(buffer, file_size - total_bytes_received);
-            total_bytes_received += file_size - total_bytes_received;
+            cout << "Error receiving file" << endl;
+            return;
         }
-        else
-            file.write(buffer, sizeof(buffer));
+        total_bytes_received += bytes_received;
+        file.write(buffer, bytes_received);        
+        // cout << bytes_received << endl;
     }
     file.close();
 }
