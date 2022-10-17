@@ -198,8 +198,9 @@ void Server::work()
             string process_name;
             cout << "Enter process name: ";
             cin >> process_name;
-            send(new_socket_fd, process_name.c_str(), sizeof(process_name), 0);
-            recv(new_socket_fd, &n, sizeof(n), 0);
+            strcpy(temp_buffer, process_name.c_str());
+            send(new_socket_fd, temp_buffer,sizeof(temp_buffer), 0); //send process name
+            recv(new_socket_fd, &n, sizeof(n), 0); //receive result from client
             if (n == 0)
             {
                 cout << "Process killed" << endl;
@@ -213,7 +214,7 @@ void Server::work()
         
         case 4:
         {
-            //create process    
+            //create new process    
             break;
         }
     
