@@ -25,9 +25,10 @@ bool is_file_exist(string file_path)
 
 int get_file_size(string file_path)
 {
+    int size{0};
     ifstream file(file_path.c_str());
-    file.seekg(0, ios_base::end); //use seekg to set the cursor position to the end of the file 
-    int size = file.tellg(); //use tllg() to get the size of the file
+    file.seekg(0, ios_base::end); // use seekg to set the cursor position to the end of the file
+    size = file.tellg();          // use tllg() to get the size of the file
     file.close();
     return size;
 }
@@ -36,32 +37,49 @@ void send_file(int socket, string file_path, int file_size)
 {
     int total_bytes_sent = 0;
     char buffer[1024];
+    int bytes_sent = 0;
     ifstream file(file_path.c_str());
     while (total_bytes_sent < file_size)
     {
+        memset(buffer, 0, sizeof(buffer));
         file.read(buffer, sizeof(buffer));
         // cout << buffer;
-        int bytes_sent = send(socket, buffer, sizeof(buffer), 0);
+        bytes_sent = send(socket, buffer, sizeof(buffer), 0);
         total_bytes_sent += bytes_sent;
-        memset(buffer, 0, sizeof(buffer));
-    } 
+
+        // send last buffer if file size is not multiple of 1024
+        if (file_size - total_bytes_sent < 1024)
+        {
+            file.read(buffer, file_size - total_bytes_sent);
+            // cout << buffer;
+            bytes_sent = send(socket, buffer, file_size - total_bytes_sent, 0);
+            total_bytes_sent += bytes_sent;
+        }
+
+        cout << total_bytes_sent << endl;
+    }
     file.close();
-    
 }
 
 void receive_file(int socket, string file_path, int file_size)
 {
     int total_bytes_received = 0;
+    int bytes_received = 0;
     char buffer[1024];
-    ofstream file(file_path.c_str());
+    ofstream file{file_path};
     while (total_bytes_received < file_size)
     {
         memset(buffer, 0, sizeof(buffer));
-        int bytes_received = recv(socket, buffer, sizeof(buffer), 0);
-        // cout << buffer; 
-        file << buffer;
+        bytes_received = recv(socket, buffer, sizeof(buffer), 0);
         total_bytes_received += bytes_received;
+        
+        if (total_bytes_received + 1024 > file_size)
+        {
+            file.write(buffer, file_size - total_bytes_received);
+            total_bytes_received += file_size - total_bytes_received;
+        }
+        else
+            file.write(buffer, sizeof(buffer));
     }
     file.close();
-
 }
