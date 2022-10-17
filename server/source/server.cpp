@@ -199,11 +199,7 @@ void Server::work()
             break;
         }
         
-        case 4:
-        {
-            //delete registry
-            break;
-        }
+    
         case 0:
         {
             cout << "Server end the session." << endl;
