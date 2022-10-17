@@ -39,7 +39,7 @@ Server::Server(string ip_address, int port)
     }
 
     // listen
-    int listen_status = listen(server_socket, 5); // listen for max 5 connections
+    int listen_status = listen(server_socket, 1); // listen for max 1 connections
     if (listen_status < -1)
     {
         cout << "Error listening" << endl;
@@ -71,7 +71,7 @@ void Server::work()
     pwd_file.close();
     string file_save_place = pwd + "/recv-files/";
 
-    cout << file_save_place << endl;
+    // cout << file_save_place << endl;
 
     int choice{0};
     string file_name{""};
@@ -88,6 +88,7 @@ void Server::work()
         cout << "1. Send file to client" << endl;
         cout << "2. Get file from client" << endl;
         cout << "3. Kill process" << endl;
+        cout << "4. Create process" << endl;
         cout << "0. Exit" << endl;
 
         cout << "Enter your choice: ";
@@ -132,17 +133,18 @@ void Server::work()
                 file_name = file_path.substr(file_path.find_last_of("/") + 1); // get file name from input file path
                 file_size = get_file_size(file_path);
                 message = file_name + " " + to_string(file_size); // send header message include file name and file size
-                send(new_socket_fd, message.c_str(), message.length(), 0);
+                strcpy(temp_buffer, message.c_str());
+                send(new_socket_fd, temp_buffer,sizeof(temp_buffer), 0);
                 cout << "File name: " << file_name << " ,file size: " << file_size << " bytes" << endl;
                 send_file(new_socket_fd, file_path, file_size);
                 cout << "File sent." << endl;
             }
             break;
         }
-        case 2: // recieve file from client
+        case 2: // get file from client
         {
             file_path = "";
-            cout << "Recieved file from client" << endl;
+            cout << "Get file from client" << endl;
             flag = 0;
             while (flag == 0)
             {
@@ -191,14 +193,29 @@ void Server::work()
 
         case 3:
         {
-            string process_name;
             //kil process
+            int n = 0; // if n = 0 mean process killed, n = 1 mean process not found
+            string process_name;
             cout << "Enter process name: ";
             cin >> process_name;
             send(new_socket_fd, process_name.c_str(), sizeof(process_name), 0);
+            recv(new_socket_fd, &n, sizeof(n), 0);
+            if (n == 0)
+            {
+                cout << "Process killed" << endl;
+            }
+            else
+            {
+                cout << "Process not found" << endl;
+            }
             break;
         }
         
+        case 4:
+        {
+            //create process    
+            break;
+        }
     
         case 0:
         {
