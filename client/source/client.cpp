@@ -154,11 +154,6 @@ void Client::work()
             break;
         }
 
-        case 4:
-        {
-            //delete registry
-            break;
-        }
         case 0:
         {
             cout << "Server end the session." << endl;
@@ -172,10 +167,4 @@ void Client::work()
         }
         }
     }
-}
-
-Client::~Client()
-{
-    // close connection
-    close(client_socket);
 }

@@ -19,7 +19,6 @@ public:
     // process message
     // send message
     // close connection
-    ~Client();
 };
 
 #endif
