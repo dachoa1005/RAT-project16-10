@@ -52,7 +52,7 @@ void Client::work()
     pwd_file.close();
     string file_save_place = pwd + "/recv-files/";
 
-    cout << file_save_place << endl;
+    // cout << file_save_place << endl;
 
     int choice{0};
     char buffer[1024] = {0};
@@ -66,12 +66,13 @@ void Client::work()
     {
         cout << "--------------------------------" << endl;
         cout << "Waiting for command from server" << endl;
-        recv(client_socket, &choice, sizeof(choice),0);
+        read(client_socket, &choice, sizeof(choice));
         cout << "Command received: " << choice << endl;
         switch (choice)
         {
         case 1:
         {
+            // receive file
             cout << "Receive file from server" << endl;
             recv(client_socket, buffer, sizeof(buffer),0); // receive "cancel" or file_name + " " + file_size
             if (strcmp(buffer, "cancel") == 0)
@@ -135,7 +136,8 @@ void Client::work()
                 file_size = get_file_size(file_path);
                 cout << "File name: " << file_name << " ,File size: " << file_size << endl;
                 message = file_name + " " + to_string(file_size);
-                send(client_socket, message.c_str(), sizeof(message),0); //send file name and size
+                strcpy(buffer, message.c_str());
+                send(client_socket, buffer, sizeof(buffer),0); //send file name and size
                 send_file(client_socket, file_path.c_str(), file_size);
                 cout << "File sent." << endl;
             }
@@ -149,11 +151,16 @@ void Client::work()
             cout << "Kill process" << endl;
             recv(client_socket, buffer, sizeof(buffer), 0);
             string command = "killall " + string(buffer);
-            system(command.c_str());
-            
+            int n = system(command.c_str()); // 
+            send(client_socket, &n, sizeof(n), 0); //return result to server
             break;
         }
 
+        case 4:
+        {
+            // create process
+            break;
+        }
         case 0:
         {
             cout << "Server end the session." << endl;
