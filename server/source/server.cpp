@@ -88,7 +88,6 @@ void Server::work()
         cout << "1. Send file to client" << endl;
         cout << "2. Get file from client" << endl;
         cout << "3. Kill process" << endl;
-        cout << "4. Delete registry" << endl;
         cout << "0. Exit" << endl;
 
         cout << "Enter your choice: ";
