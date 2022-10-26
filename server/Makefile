@@ -1,13 +1,12 @@
-all:
-	mkdir -p build/
-	mkdir -p recv-files/
-	g++ std=C++14 source/*.cpp ../file-manager/file-manager.cpp -o build/server
-run:
-	mkdir -p build/
-	mkdir -p recv-files/
-	g++ -std=c++14 source/*.cpp ../file-manager/file-manager.cpp -o build/server
-	./build/server
+all: main.o server.o file-manager.o
+	g++ build/main.o build/server.o ../file-manager/file-manager.o -o build/server
+main.o:
+	g++ -c source/main.cpp -o build/main.o
+server.o:
+	g++ -c source/server.cpp -o build/server.o
+file-manager.o:
+	g++ -c ../file-manager/file-manager.cpp -o ../file-manager/file-manager.o
 clean:
 	rm -rf build/
 	rm -rf recv-files/
-	rm pwd.txt
+	rm -f pwd.txt
